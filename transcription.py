@@ -6,10 +6,10 @@ load_dotenv()
 
 def transcribe_file(audio_file_path: str) -> str:
     """
-    Transcribe a WAV audio file using Groq Whisper API
+    Transcribe an audio file using Groq Whisper API
     
     Args:
-        audio_file_path: Path to WAV audio file
+        audio_file_path: Path to audio file (WAV, WebM, MP3, etc.)
         
     Returns:
         Transcribed text
@@ -20,8 +20,10 @@ def transcribe_file(audio_file_path: str) -> str:
     if not os.path.exists(audio_file_path):
         raise FileNotFoundError(f"Audio file not found: {audio_file_path}")
     
-    if not audio_file_path.lower().endswith('.wav'):
-        raise ValueError("Only WAV files are supported")
+    # Groq Whisper supports various audio formats, not just WAV
+    supported_formats = ['.wav', '.webm', '.mp3', '.m4a', '.ogg']
+    if not any(audio_file_path.lower().endswith(fmt) for fmt in supported_formats):
+        raise ValueError(f"Audio format not supported. Supported formats: {', '.join(supported_formats)}")
     
     client = Groq()
     

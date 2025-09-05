@@ -3,16 +3,21 @@ import tempfile
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
+from dotenv import load_dotenv
 from transcription import transcribe_file
 from processing import process_food_text
 from storage import store_food_data, get_today_entries
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
 def allowed_file(filename):
-    """Check if file is a WAV file"""
-    return filename.lower().endswith('.wav')
+    """Check if file is a supported audio file"""
+    supported_formats = ['.wav', '.webm', '.mp3', '.m4a', '.ogg']
+    return any(filename.lower().endswith(fmt) for fmt in supported_formats)
 
 @app.route('/')
 def index():
@@ -30,7 +35,7 @@ def upload_audio():
         
         file = request.files['audio']
         if file.filename == '' or not allowed_file(file.filename):
-            return jsonify({'error': 'Please select a WAV file'}), 400
+            return jsonify({'error': 'Please select a supported audio file (WAV, WebM, MP3, etc.)'}), 400
         
         # Save uploaded file temporarily
         filename = secure_filename(file.filename)

@@ -26,56 +26,84 @@
             margin-bottom: 30px;
         }
         
-        .upload-section {
+        .recording-section {
             text-align: center;
             margin-bottom: 40px;
-            padding: 30px;
-            border: 2px dashed #ddd;
-            border-radius: 8px;
+            padding: 40px 30px;
             background-color: #fafafa;
+            border-radius: 12px;
         }
         
-        .file-input {
-            margin: 20px 0;
+        .record-button {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: none;
+            background-color: #FF3B30;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
         }
         
-        input[type="file"] {
+        .record-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
+        }
+        
+        .record-button.recording {
+            animation: pulse 1.5s infinite;
+            background-color: #FF3B30;
+        }
+        
+        .record-button.processing {
+            background-color: #34C759;
+            cursor: not-allowed;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+            }
+            50% {
+                box-shadow: 0 4px 25px rgba(255, 59, 48, 0.6);
+                transform: scale(1.05);
+            }
+            100% {
+                box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
+            }
+        }
+        
+        .stop-button {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            border: none;
+            background-color: #333;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
             display: none;
         }
         
-        .file-label {
-            display: inline-block;
-            padding: 12px 24px;
-            background-color: #007AFF;
-            color: white;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
+        .recording-timer {
+            font-size: 18px;
+            color: #FF3B30;
+            font-weight: 600;
+            margin: 10px 0;
+            display: none;
         }
         
-        .file-label:hover {
-            background-color: #0056CC;
-        }
-        
-        .upload-btn {
-            padding: 12px 30px;
-            background-color: #34C759;
-            color: white;
-            border: none;
-            border-radius: 6px;
+        .recording-instruction {
             font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        
-        .upload-btn:hover {
-            background-color: #28A745;
-        }
-        
-        .upload-btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
+            color: #666;
+            margin: 15px 0;
         }
         
         .status {
@@ -160,10 +188,11 @@
             margin-bottom: 10px;
         }
         
-        .filename {
+        .permission-note {
             font-size: 14px;
             color: #666;
             margin-top: 10px;
+            font-style: italic;
         }
     </style>
 </head>
@@ -171,17 +200,21 @@
     <div class="container">
         <h1>🎤 Voice Food Logger</h1>
         
-        <div class="upload-section">
-            <h3>Upload WAV Audio File</h3>
-            <p>Record yourself describing what you ate, then upload the WAV file</p>
+        <div class="recording-section">
+            <h3>Voice Recording</h3>
+            <p class="recording-instruction" id="instruction">Tap the button and describe what you ate</p>
             
-            <div class="file-input">
-                <label for="audioFile" class="file-label">Choose WAV File</label>
-                <input type="file" id="audioFile" accept=".wav">
-                <button class="upload-btn" id="uploadBtn" disabled>Process Audio</button>
+            <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                <button class="record-button" id="recordBtn">
+                    🎤
+                </button>
+                <button class="stop-button" id="stopBtn">
+                    ⏹️
+                </button>
+                <div class="recording-timer" id="timer">00:00</div>
             </div>
             
-            <div class="filename" id="filename"></div>
+            <div class="permission-note" id="permissionNote">*Microphone permission required</div>
             <div class="status" id="status"></div>
         </div>
         
@@ -193,12 +226,12 @@
                 {% if entries %}
                     {% for entry in entries %}
                     <div class="entry">
-                        <div class="entry-time">{{ entry.timestamp }}</div>
+                        <div class="entry-time">{{ entry['timestamp'] }}</div>
                         <div class="food-items">
-                            {% for item in entry.items %}
+                            {% for item in entry['items'] %}
                             <div class="food-item">
-                                <span class="food-name">{{ item.food }}</span>
-                                <span class="food-quantity">{{ item.quantity }}</span>
+                                <span class="food-name">{{ item['food'] }}</span>
+                                <span class="food-quantity">{{ item['quantity'] }}</span>
                             </div>
                             {% endfor %}
                         </div>
@@ -212,45 +245,126 @@
     </div>
 
     <script>
-        const fileInput = document.getElementById('audioFile');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const filename = document.getElementById('filename');
+        const recordBtn = document.getElementById('recordBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const timer = document.getElementById('timer');
+        const instruction = document.getElementById('instruction');
+        const permissionNote = document.getElementById('permissionNote');
         const status = document.getElementById('status');
         const results = document.getElementById('results');
         const todayEntries = document.getElementById('todayEntries');
         
-        fileInput.addEventListener('change', function(e) {
-            if (e.target.files.length > 0) {
-                const file = e.target.files[0];
-                filename.textContent = `Selected: ${file.name}`;
-                uploadBtn.disabled = false;
+        let mediaRecorder;
+        let audioChunks = [];
+        let recording = false;
+        let startTime;
+        let timerInterval;
+        
+        // Initialize recording functionality
+        async function initializeRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    audio: {
+                        channelCount: 1,
+                        sampleRate: 44100
+                    }
+                });
                 
-                if (!file.name.toLowerCase().endsWith('.wav')) {
-                    showStatus('error', 'Please select a WAV file');
-                    uploadBtn.disabled = true;
-                }
-            } else {
-                filename.textContent = '';
-                uploadBtn.disabled = true;
+                mediaRecorder = new MediaRecorder(stream, {
+                    mimeType: 'audio/webm'
+                });
+                
+                mediaRecorder.ondataavailable = function(event) {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = function() {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                    convertAndUploadAudio(audioBlob);
+                    audioChunks = [];
+                };
+                
+                permissionNote.textContent = 'Ready to record!';
+                permissionNote.style.color = '#34C759';
+                
+            } catch (error) {
+                permissionNote.textContent = 'Microphone permission denied. Please allow access and refresh.';
+                permissionNote.style.color = '#FF3B30';
+                recordBtn.disabled = true;
+            }
+        }
+        
+        recordBtn.addEventListener('click', function() {
+            if (!recording) {
+                startRecording();
             }
         });
         
-        uploadBtn.addEventListener('click', function() {
-            const file = fileInput.files[0];
-            if (!file) return;
+        stopBtn.addEventListener('click', function() {
+            if (recording) {
+                stopRecording();
+            }
+        });
+        
+        function startRecording() {
+            if (!mediaRecorder) {
+                initializeRecording().then(() => {
+                    if (mediaRecorder) startRecording();
+                });
+                return;
+            }
             
-            const formData = new FormData();
-            formData.append('audio', file);
+            recording = true;
+            audioChunks = [];
             
-            showStatus('processing', 'Processing audio... This may take a few seconds.');
-            uploadBtn.disabled = true;
+            recordBtn.classList.add('recording');
+            recordBtn.textContent = '🔴';
+            stopBtn.style.display = 'block';
+            timer.style.display = 'block';
+            instruction.textContent = 'Recording... speak now!';
             
-            fetch('/upload_audio', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
+            mediaRecorder.start();
+            startTime = Date.now();
+            updateTimer();
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        
+        function stopRecording() {
+            recording = false;
+            
+            recordBtn.classList.remove('recording');
+            recordBtn.classList.add('processing');
+            recordBtn.textContent = '⏳';
+            stopBtn.style.display = 'none';
+            timer.style.display = 'none';
+            instruction.textContent = 'Processing audio...';
+            
+            mediaRecorder.stop();
+            clearInterval(timerInterval);
+        }
+        
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        async function convertAndUploadAudio(audioBlob) {
+            try {
+                // Create FormData and upload the audio blob directly
+                const formData = new FormData();
+                formData.append('audio', audioBlob, 'recording.wav');
+                
+                showStatus('processing', 'Processing audio... This may take a few seconds.');
+                
+                const response = await fetch('/upload_audio', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
                 if (data.success) {
                     showStatus('success', 'Audio processed successfully!');
                     displayResults(data);
@@ -258,13 +372,20 @@
                 } else {
                     showStatus('error', `Error: ${data.error}`);
                 }
-            })
-            .catch(error => {
+                
+            } catch (error) {
                 showStatus('error', `Network error: ${error.message}`);
-            })
-            .finally(() => {
-                uploadBtn.disabled = false;
-            });
+            } finally {
+                // Reset UI
+                recordBtn.classList.remove('processing');
+                recordBtn.textContent = '🎤';
+                instruction.textContent = 'Tap the button and describe what you ate';
+            }
+        }
+        
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            initializeRecording();
         });
         
         function showStatus(type, message) {

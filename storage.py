@@ -61,9 +61,16 @@ def get_today_entries() -> list:
     if not os.path.exists(filepath):
         return []
     
+    # Check if file is empty
+    if os.path.getsize(filepath) == 0:
+        return []
+    
     with open(filepath, 'r') as file:
-        data = json.load(file)
-        return data if isinstance(data, list) else [data]
+        try:
+            data = json.load(file)
+            return data if isinstance(data, list) else [data]
+        except json.JSONDecodeError:
+            return []
 
 if __name__ == "__main__":
     # Test the storage system
