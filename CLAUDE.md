@@ -64,34 +64,76 @@ voice-food-logger/
 - [x] Create GitHub repo and initialize project structure
 - [x] Set up configuration files (.env, requirements.txt, .gitignore)
 - [x] Create CLAUDE.md with detailed development plan
+- [x] Build transcription.py with Groq Whisper integration
+- [x] Build processing.py with LLM food parsing
+- [x] Build storage.py for JSON file management
+- [x] Create Flask app.py with audio upload endpoint
 
 ### 🚧 In Progress
-- [ ] Build transcription.py with Groq Whisper integration
-- [ ] Build processing.py with LLM food parsing
-- [ ] Build storage.py for JSON file management
-- [ ] Create Flask app.py with audio upload endpoint
 - [ ] Create single HTML template with embedded CSS/JS
-- [ ] Create test files for all modules
+- [ ] Create simple test files for verification
 - [ ] Test complete pipeline with sample audio
 
 ### User Input Required At:
-1. **Next**: Add your GROQ API key to .env file
-2. **After core build**: Provide test audio recording (WAV format, food description)
-3. **After pipeline testing**: Test web interface and provide feedback
+1. ✅ **DONE**: Add your GROQ API key to .env file
+2. ✅ **READY**: Provide test audio recording (WAV format, food description) 
+3. **NEXT**: Test web interface and provide feedback
 
 ### Key Features
 - Record button with visual feedback (ready/recording/processing states)
 - Real-time processing status updates
 - Parsed results display
 - Error handling with user-friendly messages
-- API retry logic for reliability
 - Modular code structure for maintainability
 
 ### Testing Strategy
-- Unit tests for each module with mocked API responses
+- Simple test files for each module verification
 - Integration test for complete pipeline
 - Sample audio file for consistent testing
-- Error handling verification
+- Basic error handling verification
 
 ## Notes
 This is a disposable prototype focused on validating the voice → structured food data pipeline. Priority is functionality over polish.
+
+
+
+## Examples of implementation of GROQ calls that may be useful:
+
+
+import os
+from groq import Groq
+
+client = Groq()
+filename = os.path.dirname(__file__) + "/audio.m4a"
+
+with open(filename, "rb") as file:
+    transcription = client.audio.transcriptions.create(
+      file=(filename, file.read()),
+      model="whisper-large-v3-turbo",
+      response_format="verbose_json",
+    )
+    print(transcription.text)
+      
+
+
+from groq import Groq
+
+client = Groq()
+completion = client.chat.completions.create(
+    model="qwen/qwen3-32b",
+    messages=[
+      {
+        "role": "user",
+        "content": ""
+      }
+    ],
+    temperature=0.6,
+    max_completion_tokens=4096,
+    top_p=0.95,
+    reasoning_effort="default",
+    stream=True,
+    stop=None
+)
+
+for chunk in completion:
+    print(chunk.choices[0].delta.content or "", end="")

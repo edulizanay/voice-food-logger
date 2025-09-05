@@ -5,436 +5,327 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Voice Food Logger</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .container {
             max-width: 800px;
             margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
+            border-radius: 12px;
             padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
             text-align: center;
+            color: #333;
+            margin-bottom: 30px;
         }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 300;
-        }
-
-        .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
-        }
-
-        .main-content {
-            padding: 40px;
-        }
-
-        .record-section {
+        
+        .upload-section {
             text-align: center;
             margin-bottom: 40px;
-        }
-
-        .record-button {
-            width: 200px;
-            height: 200px;
-            border: none;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-            color: white;
-            font-size: 1.2em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .record-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
-        }
-
-        .record-button.recording {
-            background: linear-gradient(135deg, #ff3838 0%, #c0392b 100%);
-            animation: pulse 1s infinite;
-        }
-
-        .record-button.processing {
-            background: linear-gradient(135deg, #ffa726 0%, #ef6c00 100%);
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .status {
-            margin-top: 20px;
-            font-size: 1.1em;
-            color: #666;
-            min-height: 25px;
-        }
-
-        .status.error {
-            color: #e74c3c;
-            font-weight: bold;
-        }
-
-        .status.success {
-            color: #27ae60;
-            font-weight: bold;
-        }
-
-        .results {
-            margin-top: 30px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            border-left: 4px solid #4CAF50;
-        }
-
-        .results h3 {
-            color: #333;
-            margin-bottom: 15px;
-        }
-
-        .transcription {
-            background: #e8f5e8;
-            padding: 15px;
+            padding: 30px;
+            border: 2px dashed #ddd;
             border-radius: 8px;
-            margin-bottom: 20px;
-            font-style: italic;
-            border-left: 3px solid #4CAF50;
+            background-color: #fafafa;
         }
-
-        .food-items {
-            display: grid;
-            gap: 10px;
+        
+        .file-input {
+            margin: 20px 0;
         }
-
-        .food-item {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .food-name {
-            font-weight: bold;
-            color: #333;
-            flex-grow: 1;
-        }
-
-        .food-quantity {
-            color: #666;
-            font-size: 0.9em;
-            background: #f1f3f4;
-            padding: 5px 10px;
-            border-radius: 15px;
-        }
-
-        .entries-section {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 2px solid #eee;
-        }
-
-        .entries-section h2 {
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .entry {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border-left: 4px solid #667eea;
-        }
-
-        .entry-time {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-
-        .hidden {
+        
+        input[type="file"] {
             display: none;
         }
-
-        .instructions {
-            background: #e3f2fd;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 30px;
-            border-left: 4px solid #2196f3;
+        
+        .file-label {
+            display: inline-block;
+            padding: 12px 24px;
+            background-color: #007AFF;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
         }
-
-        .instructions h3 {
-            color: #1976d2;
+        
+        .file-label:hover {
+            background-color: #0056CC;
+        }
+        
+        .upload-btn {
+            padding: 12px 30px;
+            background-color: #34C759;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        
+        .upload-btn:hover {
+            background-color: #28A745;
+        }
+        
+        .upload-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .status.processing {
+            background-color: #FFF3CD;
+            color: #856404;
+            border: 1px solid #FFEAA7;
+        }
+        
+        .status.success {
+            background-color: #D4EDDA;
+            color: #155724;
+            border: 1px solid #C3E6CB;
+        }
+        
+        .status.error {
+            background-color: #F8D7DA;
+            color: #721C24;
+            border: 1px solid #F1B0B7;
+        }
+        
+        .results {
+            margin-top: 30px;
+        }
+        
+        .result-item {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #007AFF;
+        }
+        
+        .transcription {
+            font-style: italic;
+            color: #666;
             margin-bottom: 10px;
         }
-
-        .instructions p {
-            color: #555;
-            line-height: 1.5;
+        
+        .food-items {
+            margin-top: 10px;
+        }
+        
+        .food-item {
+            background-color: white;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .food-name {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .food-quantity {
+            color: #666;
+        }
+        
+        .today-entries {
+            margin-top: 40px;
+        }
+        
+        .entry {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        
+        .entry-time {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .filename {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>🎤 Voice Food Logger</h1>
-            <p>Speak what you ate, we'll do the rest</p>
+        <h1>🎤 Voice Food Logger</h1>
+        
+        <div class="upload-section">
+            <h3>Upload WAV Audio File</h3>
+            <p>Record yourself describing what you ate, then upload the WAV file</p>
+            
+            <div class="file-input">
+                <label for="audioFile" class="file-label">Choose WAV File</label>
+                <input type="file" id="audioFile" accept=".wav">
+                <button class="upload-btn" id="uploadBtn" disabled>Process Audio</button>
+            </div>
+            
+            <div class="filename" id="filename"></div>
+            <div class="status" id="status"></div>
         </div>
-
-        <div class="main-content">
-            <div class="instructions">
-                <h3>How to use:</h3>
-                <p>Click the red button and speak naturally about what you ate. For example: "I had 150 grams of chicken breast and half a cup of brown rice" or "I ate two eggs and a banana for breakfast".</p>
-            </div>
-
-            <div class="record-section">
-                <button id="recordButton" class="record-button">
-                    <span id="buttonText">🎤 Start Recording</span>
-                </button>
-                <div id="status" class="status">Ready to record</div>
-                <input type="file" id="fileInput" accept="audio/*" style="display: none;">
-            </div>
-
-            <div id="results" class="results hidden">
-                <h3>Latest Entry:</h3>
-                <div id="transcription" class="transcription"></div>
-                <div id="foodItems" class="food-items"></div>
-            </div>
-
-            <div class="entries-section">
-                <h2>Today's Food Log</h2>
-                <div id="todayEntries">
-                    {% if entries %}
-                        {% for entry in entries %}
-                        <div class="entry">
-                            <div class="entry-time">{{ entry.timestamp }}</div>
-                            <div class="food-items">
-                                {% for item in entry.items %}
-                                <div class="food-item">
-                                    <span class="food-name">{{ item.food }}</span>
-                                    <span class="food-quantity">{{ item.quantity }}</span>
-                                </div>
-                                {% endfor %}
+        
+        <div class="results" id="results"></div>
+        
+        <div class="today-entries">
+            <h3>Today's Food Entries</h3>
+            <div id="todayEntries">
+                {% if entries %}
+                    {% for entry in entries %}
+                    <div class="entry">
+                        <div class="entry-time">{{ entry.timestamp }}</div>
+                        <div class="food-items">
+                            {% for item in entry.items %}
+                            <div class="food-item">
+                                <span class="food-name">{{ item.food }}</span>
+                                <span class="food-quantity">{{ item.quantity }}</span>
                             </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-                    {% else %}
-                    <p style="text-align: center; color: #666; font-style: italic;">No entries yet today. Start by recording what you ate!</p>
-                    {% endif %}
-                </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No entries for today yet</p>
+                {% endif %}
             </div>
         </div>
     </div>
 
     <script>
-        let mediaRecorder;
-        let audioChunks = [];
-        let isRecording = false;
-
-        const recordButton = document.getElementById('recordButton');
-        const buttonText = document.getElementById('buttonText');
+        const fileInput = document.getElementById('audioFile');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const filename = document.getElementById('filename');
         const status = document.getElementById('status');
         const results = document.getElementById('results');
-        const transcription = document.getElementById('transcription');
-        const foodItems = document.getElementById('foodItems');
-        const fileInput = document.getElementById('fileInput');
-
-        // Check for browser support
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            status.textContent = "Audio recording not supported. You can upload an audio file instead.";
-            status.className = 'status error';
-            recordButton.onclick = () => fileInput.click();
-            buttonText.textContent = "📁 Upload Audio";
-        } else {
-            recordButton.onclick = toggleRecording;
-        }
-
-        // Handle file upload
-        fileInput.onchange = function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                uploadAudio(file);
-            }
-        };
-
-        async function toggleRecording() {
-            if (!isRecording) {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ 
-                        audio: {
-                            sampleRate: 16000,
-                            channelCount: 1,
-                            echoCancellation: true,
-                            noiseSuppression: true
-                        }
-                    });
-                    
-                    mediaRecorder = new MediaRecorder(stream);
-                    audioChunks = [];
-                    
-                    mediaRecorder.ondataavailable = event => {
-                        audioChunks.push(event.data);
-                    };
-                    
-                    mediaRecorder.onstop = () => {
-                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                        uploadAudio(audioBlob);
-                        stream.getTracks().forEach(track => track.stop());
-                    };
-                    
-                    mediaRecorder.start();
-                    isRecording = true;
-                    
-                    recordButton.className = 'record-button recording';
-                    buttonText.textContent = '⏹️ Stop Recording';
-                    status.textContent = 'Recording... Speak now!';
-                    status.className = 'status';
-                    
-                } catch (error) {
-                    status.textContent = 'Microphone access denied. Try uploading a file instead.';
-                    status.className = 'status error';
-                    recordButton.onclick = () => fileInput.click();
-                    buttonText.textContent = "📁 Upload Audio";
+        const todayEntries = document.getElementById('todayEntries');
+        
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                filename.textContent = `Selected: ${file.name}`;
+                uploadBtn.disabled = false;
+                
+                if (!file.name.toLowerCase().endsWith('.wav')) {
+                    showStatus('error', 'Please select a WAV file');
+                    uploadBtn.disabled = true;
                 }
             } else {
-                mediaRecorder.stop();
-                isRecording = false;
-                
-                recordButton.className = 'record-button processing';
-                buttonText.textContent = '⏳ Processing...';
-                status.textContent = 'Processing your recording...';
-                status.className = 'status';
+                filename.textContent = '';
+                uploadBtn.disabled = true;
             }
-        }
-
-        async function uploadAudio(audioBlob) {
+        });
+        
+        uploadBtn.addEventListener('click', function() {
+            const file = fileInput.files[0];
+            if (!file) return;
+            
             const formData = new FormData();
-            formData.append('audio', audioBlob, 'recording.wav');
+            formData.append('audio', file);
             
-            try {
-                recordButton.className = 'record-button processing';
-                buttonText.textContent = '⏳ Processing...';
-                status.textContent = 'Transcribing and parsing...';
-                status.className = 'status';
-                
-                const response = await fetch('/upload_audio', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
+            showStatus('processing', 'Processing audio... This may take a few seconds.');
+            uploadBtn.disabled = true;
+            
+            fetch('/upload_audio', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
                 if (data.success) {
+                    showStatus('success', 'Audio processed successfully!');
                     displayResults(data);
-                    refreshEntries();
-                    status.textContent = 'Successfully logged your food!';
-                    status.className = 'status success';
+                    refreshTodayEntries();
                 } else {
-                    status.textContent = `Error: ${data.error}`;
-                    status.className = 'status error';
+                    showStatus('error', `Error: ${data.error}`);
                 }
-                
-            } catch (error) {
-                status.textContent = `Upload failed: ${error.message}`;
-                status.className = 'status error';
-            } finally {
-                resetButton();
-            }
+            })
+            .catch(error => {
+                showStatus('error', `Network error: ${error.message}`);
+            })
+            .finally(() => {
+                uploadBtn.disabled = false;
+            });
+        });
+        
+        function showStatus(type, message) {
+            status.className = `status ${type}`;
+            status.textContent = message;
+            status.style.display = 'block';
         }
-
+        
         function displayResults(data) {
-            transcription.textContent = `"${data.transcription}"`;
+            const resultDiv = document.createElement('div');
+            resultDiv.className = 'result-item';
             
-            foodItems.innerHTML = '';
+            let html = `
+                <div class="transcription">"${data.transcription}"</div>
+                <div class="food-items">
+            `;
+            
             data.items.forEach(item => {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'food-item';
-                itemDiv.innerHTML = `
-                    <span class="food-name">${item.food}</span>
-                    <span class="food-quantity">${item.quantity}</span>
+                html += `
+                    <div class="food-item">
+                        <span class="food-name">${item.food}</span>
+                        <span class="food-quantity">${item.quantity}</span>
+                    </div>
                 `;
-                foodItems.appendChild(itemDiv);
             });
             
-            results.classList.remove('hidden');
-        }
-
-        function resetButton() {
-            recordButton.className = 'record-button';
-            buttonText.textContent = '🎤 Start Recording';
+            html += '</div>';
+            resultDiv.innerHTML = html;
             
-            setTimeout(() => {
-                if (status.className !== 'status success') {
-                    status.textContent = 'Ready to record';
-                    status.className = 'status';
-                }
-            }, 3000);
+            results.insertBefore(resultDiv, results.firstChild);
         }
-
-        async function refreshEntries() {
-            try {
-                const response = await fetch('/entries');
-                const entries = await response.json();
-                
-                const container = document.getElementById('todayEntries');
-                if (entries.length === 0) {
-                    container.innerHTML = '<p style="text-align: center; color: #666; font-style: italic;">No entries yet today. Start by recording what you ate!</p>';
-                } else {
-                    container.innerHTML = entries.map(entry => `
-                        <div class="entry">
-                            <div class="entry-time">${new Date(entry.timestamp).toLocaleString()}</div>
-                            <div class="food-items">
-                                ${entry.items.map(item => `
-                                    <div class="food-item">
-                                        <span class="food-name">${item.food}</span>
-                                        <span class="food-quantity">${item.quantity}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `).join('');
-                }
-            } catch (error) {
-                console.error('Failed to refresh entries:', error);
-            }
+        
+        function refreshTodayEntries() {
+            fetch('/entries')
+                .then(response => response.json())
+                .then(entries => {
+                    if (entries.length === 0) {
+                        todayEntries.innerHTML = '<p>No entries for today yet</p>';
+                        return;
+                    }
+                    
+                    let html = '';
+                    entries.forEach(entry => {
+                        html += `
+                            <div class="entry">
+                                <div class="entry-time">${entry.timestamp}</div>
+                                <div class="food-items">
+                        `;
+                        entry.items.forEach(item => {
+                            html += `
+                                <div class="food-item">
+                                    <span class="food-name">${item.food}</span>
+                                    <span class="food-quantity">${item.quantity}</span>
+                                </div>
+                            `;
+                        });
+                        html += '</div></div>';
+                    });
+                    
+                    todayEntries.innerHTML = html;
+                });
         }
     </script>
 </body>

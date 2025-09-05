@@ -21,3 +21,4 @@ wheels/
 *.egg
 logs/*.json
 .DS_Store
+.env
