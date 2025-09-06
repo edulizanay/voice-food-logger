@@ -29,7 +29,7 @@
         .recording-section {
             text-align: center;
             margin-bottom: 40px;
-            padding: 40px 30px;
+            padding: 40px;
             background-color: #fafafa;
             border-radius: 12px;
         }
@@ -43,143 +43,55 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 20px;
+            margin: 20px auto;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
-        }
-        
-        .record-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(255, 59, 48, 0.4);
         }
         
         .record-button.recording {
-            animation: pulse 1.5s infinite;
-            background-color: #FF3B30;
+            background-color: #FF6B6B;
+            transform: scale(1.1);
         }
         
         .record-button.processing {
-            background-color: #34C759;
+            background-color: #FFA500;
             cursor: not-allowed;
         }
         
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
-            }
-            50% {
-                box-shadow: 0 4px 25px rgba(255, 59, 48, 0.6);
-                transform: scale(1.05);
-            }
-            100% {
-                box-shadow: 0 4px 15px rgba(255, 59, 48, 0.3);
-            }
+        .record-button:hover:not(.processing) {
+            background-color: #E02B20;
         }
         
-        .stop-button {
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            border: none;
-            background-color: #333;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-            margin: 10px;
-            display: none;
-        }
-        
-        .recording-timer {
-            font-size: 18px;
-            color: #FF3B30;
-            font-weight: 600;
+        .timer, .status {
             margin: 10px 0;
-            display: none;
-        }
-        
-        .recording-instruction {
             font-size: 16px;
+            min-height: 20px;
+        }
+        
+        .status.success { color: #28a745; }
+        .status.error { color: #dc3545; }
+        
+        .instruction {
             color: #666;
-            margin: 15px 0;
+            margin-bottom: 20px;
         }
         
-        .status {
-            margin: 20px 0;
-            padding: 15px;
-            border-radius: 6px;
-            display: none;
-        }
-        
-        .status.processing {
-            background-color: #FFF3CD;
-            color: #856404;
-            border: 1px solid #FFEAA7;
-        }
-        
-        .status.success {
-            background-color: #D4EDDA;
-            color: #155724;
-            border: 1px solid #C3E6CB;
-        }
-        
-        .status.error {
-            background-color: #F8D7DA;
-            color: #721C24;
-            border: 1px solid #F1B0B7;
-        }
-        
-        .results {
-            margin-top: 30px;
-        }
-        
-        .result-item {
-            background-color: #f8f9fa;
-            border-radius: 6px;
-            padding: 15px;
-            margin: 10px 0;
-            border-left: 4px solid #007AFF;
-        }
-        
-        .transcription {
-            font-style: italic;
-            color: #666;
-            margin-bottom: 10px;
-        }
-        
-        .food-items {
+        .permission-note {
+            font-size: 12px;
+            color: #999;
             margin-top: 10px;
         }
         
-        .food-item {
-            background-color: white;
-            padding: 8px 12px;
-            margin: 5px 0;
-            border-radius: 4px;
-            display: flex;
-            justify-content: space-between;
+        .results, .today-entries, .daily-summary {
+            margin-top: 30px;
         }
         
-        .food-name {
-            font-weight: 500;
-            color: #333;
-        }
-        
-        .food-quantity {
-            color: #666;
-        }
-        
-        .today-entries {
-            margin-top: 40px;
-        }
-        
-        .entry {
+        .result-item, .entry {
             background-color: #f8f9fa;
             border-radius: 6px;
             padding: 15px;
-            margin: 10px 0;
+            margin: 15px 0;
         }
         
         .entry-time {
@@ -188,11 +100,70 @@
             margin-bottom: 10px;
         }
         
-        .permission-note {
-            font-size: 14px;
+        .food-item {
+            background-color: white;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
+        }
+        
+        .food-name {
+            font-weight: 600;
+            color: #333;
+            margin-right: 10px;
+        }
+        
+        .food-quantity {
             color: #666;
-            margin-top: 10px;
+        }
+        
+        .macro-table {
+            margin-top: 8px;
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        
+        .macro-table th, .macro-table td {
+            padding: 4px 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .macro-table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #666;
+        }
+        
+        .daily-summary {
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .daily-summary h3 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        
+        .daily-summary .macro-table th {
+            background-color: #2196f3;
+            color: white;
+        }
+        
+        .daily-summary .macro-table td {
+            font-weight: 500;
+        }
+        
+        .transcription {
             font-style: italic;
+            color: #666;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -201,19 +172,12 @@
         <h1>🎤 Voice Food Logger</h1>
         
         <div class="recording-section">
-            <h3>Voice Recording</h3>
-            <p class="recording-instruction" id="instruction">Tap the button and describe what you ate</p>
+            <div class="instruction" id="instruction">Click the button and speak your food intake</div>
             
-            <div style="display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                <button class="record-button" id="recordBtn">
-                    🎤
-                </button>
-                <button class="stop-button" id="stopBtn">
-                    ⏹️
-                </button>
-                <div class="recording-timer" id="timer">00:00</div>
-            </div>
+            <button class="record-button" id="recordBtn">🎤</button>
+            <button class="record-button" id="stopBtn" style="display: none;">⏹️</button>
             
+            <div class="timer" id="timer"></div>
             <div class="permission-note" id="permissionNote">*Microphone permission required</div>
             <div class="status" id="status"></div>
         </div>
@@ -232,6 +196,22 @@
                             <div class="food-item">
                                 <span class="food-name">{{ item['food'] }}</span>
                                 <span class="food-quantity">{{ item['quantity'] }}</span>
+                                {% if item.get('macros') %}
+                                <table class="macro-table">
+                                    <tr>
+                                        <th>Calories</th>
+                                        <th>Protein (g)</th>
+                                        <th>Carbs (g)</th>
+                                        <th>Fat (g)</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ item['macros']['calories'] }}</td>
+                                        <td>{{ item['macros']['protein_g'] }}</td>
+                                        <td>{{ item['macros']['carbs_g'] }}</td>
+                                        <td>{{ item['macros']['fat_g'] }}</td>
+                                    </tr>
+                                </table>
+                                {% endif %}
                             </div>
                             {% endfor %}
                         </div>
@@ -239,6 +219,30 @@
                     {% endfor %}
                 {% else %}
                     <p>No entries for today yet</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="daily-summary">
+            <h3>📊 Daily Summary</h3>
+            <div id="dailySummary">
+                {% if daily_totals %}
+                <table class="macro-table">
+                    <tr>
+                        <th>Total Calories</th>
+                        <th>Total Protein (g)</th>
+                        <th>Total Carbs (g)</th>
+                        <th>Total Fat (g)</th>
+                    </tr>
+                    <tr>
+                        <td>{{ daily_totals['calories'] }}</td>
+                        <td>{{ daily_totals['protein_g'] }}</td>
+                        <td>{{ daily_totals['carbs_g'] }}</td>
+                        <td>{{ daily_totals['fat_g'] }}</td>
+                    </tr>
+                </table>
+                {% else %}
+                    <p>No nutritional data for today yet</p>
                 {% endif %}
             </div>
         </div>
@@ -259,105 +263,89 @@
         let recording = false;
         let startTime;
         let timerInterval;
-        
-        // Initialize recording functionality
-        async function initializeRecording() {
-            try {
-                const stream = await navigator.mediaDevices.getUserMedia({ 
-                    audio: {
-                        channelCount: 1,
-                        sampleRate: 44100
-                    }
-                });
-                
-                mediaRecorder = new MediaRecorder(stream, {
-                    mimeType: 'audio/webm'
-                });
-                
-                mediaRecorder.ondataavailable = function(event) {
-                    audioChunks.push(event.data);
-                };
-                
-                mediaRecorder.onstop = function() {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-                    convertAndUploadAudio(audioBlob);
-                    audioChunks = [];
-                };
-                
-                permissionNote.textContent = 'Ready to record!';
-                permissionNote.style.color = '#34C759';
-                
-            } catch (error) {
-                permissionNote.textContent = 'Microphone permission denied. Please allow access and refresh.';
-                permissionNote.style.color = '#FF3B30';
-                recordBtn.disabled = true;
-            }
+
+        // Request microphone access on page load
+        navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+                permissionNote.style.display = 'none';
+                instruction.textContent = 'Ready to record!';
+                setupRecording(stream);
+            })
+            .catch(() => {
+                permissionNote.textContent = '*Please allow microphone access and refresh the page';
+                permissionNote.style.color = '#dc3545';
+            });
+
+        function setupRecording(stream) {
+            mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+            
+            mediaRecorder.ondataavailable = event => {
+                if (event.data.size > 0) audioChunks.push(event.data);
+            };
+            
+            mediaRecorder.onstop = () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+                uploadAudio(audioBlob);
+                audioChunks = [];
+            };
         }
-        
-        recordBtn.addEventListener('click', function() {
-            if (!recording) {
-                startRecording();
-            }
-        });
-        
-        stopBtn.addEventListener('click', function() {
-            if (recording) {
-                stopRecording();
-            }
-        });
-        
+
+        recordBtn.addEventListener('click', startRecording);
+        stopBtn.addEventListener('click', stopRecording);
+
         function startRecording() {
-            if (!mediaRecorder) {
-                initializeRecording().then(() => {
-                    if (mediaRecorder) startRecording();
-                });
-                return;
-            }
+            if (!mediaRecorder || recording) return;
             
             recording = true;
             audioChunks = [];
             
-            recordBtn.classList.add('recording');
-            recordBtn.textContent = '🔴';
-            stopBtn.style.display = 'block';
-            timer.style.display = 'block';
-            instruction.textContent = 'Recording... speak now!';
+            recordBtn.style.display = 'none';
+            stopBtn.style.display = 'flex';
+            stopBtn.classList.add('recording');
+            
+            instruction.textContent = 'Recording... Speak your food intake';
+            status.textContent = '';
+            
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 100);
             
             mediaRecorder.start();
-            startTime = Date.now();
-            updateTimer();
-            timerInterval = setInterval(updateTimer, 1000);
         }
-        
+
         function stopRecording() {
-            recording = false;
+            if (!recording) return;
             
-            recordBtn.classList.remove('recording');
+            recording = false;
+            mediaRecorder.stop();
+            
+            stopBtn.style.display = 'none';
+            recordBtn.style.display = 'flex';
             recordBtn.classList.add('processing');
             recordBtn.textContent = '⏳';
-            stopBtn.style.display = 'none';
-            timer.style.display = 'none';
-            instruction.textContent = 'Processing audio...';
             
-            mediaRecorder.stop();
+            stopBtn.classList.remove('recording');
             clearInterval(timerInterval);
+            
+            instruction.textContent = 'Processing your recording...';
+            timer.textContent = '';
+            showStatus('info', 'Processing audio...');
         }
-        
+
         function updateTimer() {
             const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            const minutes = Math.floor(elapsed / 60);
-            const seconds = elapsed % 60;
-            timer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            timer.textContent = `${elapsed}s`;
         }
-        
-        async function convertAndUploadAudio(audioBlob) {
+
+        function showStatus(type, message) {
+            status.textContent = message;
+            status.className = `status ${type}`;
+        }
+
+        async function uploadAudio(audioBlob) {
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.webm');
+            
             try {
-                // Create FormData and upload the audio blob directly
-                const formData = new FormData();
-                formData.append('audio', audioBlob, 'recording.wav');
-                
-                showStatus('processing', 'Processing audio... This may take a few seconds.');
-                
                 const response = await fetch('/upload_audio', {
                     method: 'POST',
                     body: formData
@@ -369,6 +357,7 @@
                     showStatus('success', 'Audio processed successfully!');
                     displayResults(data);
                     refreshTodayEntries();
+                    refreshDailySummary();
                 } else {
                     showStatus('error', `Error: ${data.error}`);
                 }
@@ -376,48 +365,52 @@
             } catch (error) {
                 showStatus('error', `Network error: ${error.message}`);
             } finally {
-                // Reset UI
                 recordBtn.classList.remove('processing');
                 recordBtn.textContent = '🎤';
-                instruction.textContent = 'Tap the button and describe what you ate';
+                instruction.textContent = 'Ready to record!';
             }
         }
-        
-        // Initialize on page load
-        window.addEventListener('load', function() {
-            initializeRecording();
-        });
-        
-        function showStatus(type, message) {
-            status.className = `status ${type}`;
-            status.textContent = message;
-            status.style.display = 'block';
-        }
-        
+
         function displayResults(data) {
             const resultDiv = document.createElement('div');
             resultDiv.className = 'result-item';
             
-            let html = `
-                <div class="transcription">"${data.transcription}"</div>
-                <div class="food-items">
-            `;
+            let html = `<div class="transcription">"${data.transcription}"</div><div class="food-items">`;
             
             data.items.forEach(item => {
-                html += `
-                    <div class="food-item">
-                        <span class="food-name">${item.food}</span>
-                        <span class="food-quantity">${item.quantity}</span>
-                    </div>
-                `;
+                html += `<div class="food-item">
+                    <span class="food-name">${item.food}</span>
+                    <span class="food-quantity">${item.quantity}</span>`;
+                
+                if (item.macros) {
+                    html += createMacroTable(item.macros);
+                }
+                
+                html += '</div>';
             });
             
             html += '</div>';
             resultDiv.innerHTML = html;
-            
             results.insertBefore(resultDiv, results.firstChild);
         }
-        
+
+        function createMacroTable(macros) {
+            return `<table class="macro-table">
+                <tr>
+                    <th>Calories</th>
+                    <th>Protein (g)</th>
+                    <th>Carbs (g)</th>
+                    <th>Fat (g)</th>
+                </tr>
+                <tr>
+                    <td>${macros.calories}</td>
+                    <td>${macros.protein_g}</td>
+                    <td>${macros.carbs_g}</td>
+                    <td>${macros.fat_g}</td>
+                </tr>
+            </table>`;
+        }
+
         function refreshTodayEntries() {
             fetch('/entries')
                 .then(response => response.json())
@@ -429,24 +422,42 @@
                     
                     let html = '';
                     entries.forEach(entry => {
-                        html += `
-                            <div class="entry">
-                                <div class="entry-time">${entry.timestamp}</div>
-                                <div class="food-items">
-                        `;
+                        html += `<div class="entry">
+                            <div class="entry-time">${entry.timestamp}</div>
+                            <div class="food-items">`;
+                        
                         entry.items.forEach(item => {
-                            html += `
-                                <div class="food-item">
-                                    <span class="food-name">${item.food}</span>
-                                    <span class="food-quantity">${item.quantity}</span>
-                                </div>
-                            `;
+                            html += `<div class="food-item">
+                                <span class="food-name">${item.food}</span>
+                                <span class="food-quantity">${item.quantity}</span>`;
+                            
+                            if (item.macros) {
+                                html += createMacroTable(item.macros);
+                            }
+                            
+                            html += '</div>';
                         });
+                        
                         html += '</div></div>';
                     });
                     
                     todayEntries.innerHTML = html;
                 });
+        }
+        
+        function refreshDailySummary() {
+            fetch('/daily_totals')
+                .then(response => response.json())
+                .then(totals => {
+                    const dailySummary = document.getElementById('dailySummary');
+                    
+                    if (totals.calories === 0 && totals.protein_g === 0 && totals.carbs_g === 0 && totals.fat_g === 0) {
+                        dailySummary.innerHTML = '<p>No nutritional data for today yet</p>';
+                    } else {
+                        dailySummary.innerHTML = createMacroTable(totals);
+                    }
+                })
+                .catch(error => console.error('Error fetching daily totals:', error));
         }
     </script>
 </body>

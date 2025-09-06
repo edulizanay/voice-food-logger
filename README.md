@@ -5,9 +5,11 @@ A proof-of-concept voice-based food logging system that lets you speak your food
 ## Features
 
 🎤 **Voice Recording Interface** - iPhone-style circular record button with real-time feedback  
-🧠 **AI-Powered Processing** - Uses Groq's Whisper for transcription and LLaMA for food parsing  
-📊 **Structured Output** - Converts natural speech into organized food items with quantities  
-💾 **Daily Logging** - Stores entries in daily JSON files for easy access  
+🧠 **AI-Powered Processing** - Uses Groq's Whisper for transcription and Qwen for food parsing  
+🥗 **Nutritional Analysis** - Automatic macro calculations (calories, protein, carbs, fat)  
+📊 **Smart Tables** - Clean visualization of nutritional data for each food item  
+📈 **Daily Tracking** - Real-time daily macro totals and comprehensive summaries  
+💾 **Enhanced Storage** - Stores entries with complete nutritional data in daily JSON files  
 
 ## Quick Start
 
@@ -53,14 +55,52 @@ A proof-of-concept voice-based food logging system that lets you speak your food
 
 **Speech Input:** "Today I had half a kilo of chicken, 30 grams of whey protein and half a cup of brown rice"
 
-**Structured Output:**
+**Structured Output with Nutrition:**
 ```json
 {
-  "items": [
-    {"food": "chicken breast", "quantity": "0.5 kilogram"},
-    {"food": "whey protein", "quantity": "30 grams"}, 
-    {"food": "brown rice", "quantity": "0.5 cup"}
-  ]
+  "entries": [
+    {
+      "timestamp": "2025-09-06T10:30:00Z",
+      "items": [
+        {
+          "food": "chicken breast",
+          "quantity": "0.5 kilogram",
+          "macros": {
+            "calories": 825,
+            "protein_g": 155.0,
+            "carbs_g": 0,
+            "fat_g": 18.0
+          }
+        },
+        {
+          "food": "whey protein",
+          "quantity": "30 grams",
+          "macros": {
+            "calories": 36,
+            "protein_g": 7.5,
+            "carbs_g": 0.9,
+            "fat_g": 0.3
+          }
+        },
+        {
+          "food": "brown rice",
+          "quantity": "0.5 cup",
+          "macros": {
+            "calories": 56,
+            "protein_g": 1.3,
+            "carbs_g": 11.0,
+            "fat_g": 0.45
+          }
+        }
+      ]
+    }
+  ],
+  "daily_macros": {
+    "calories": 917,
+    "protein_g": 163.8,
+    "carbs_g": 11.9,
+    "fat_g": 18.75
+  }
 }
 ```
 
@@ -68,8 +108,9 @@ A proof-of-concept voice-based food logging system that lets you speak your food
 
 - **Backend**: Python Flask
 - **Frontend**: Web Audio API, MediaRecorder
-- **AI**: Groq (Whisper + LLaMA)
-- **Storage**: Daily JSON files
+- **AI**: Groq (Whisper + Qwen)
+- **Nutrition**: Mock database with macro calculations
+- **Storage**: Enhanced daily JSON files with nutritional data
 
 ## Development
 

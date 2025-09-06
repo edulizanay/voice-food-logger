@@ -10,7 +10,7 @@
 ## Technical Requirements
 
 ### Core Pipeline
-Voice recording → Whisper transcription (Groq) → LLM processing (Groq) → JSON storage
+Voice recording → Whisper transcription (Groq) → LLM parsing (Groq) → **Nutritional lookup** → JSON storage
 
 ### Tech Stack
 - Python Flask web app
@@ -24,11 +24,39 @@ Voice recording → Whisper transcription (Groq) → LLM processing (Groq) → J
 Daily JSON files: `logs_YYYY-MM-DD.json`
 ```json
 {
-  "timestamp": "2024-01-15T10:30:00Z",
-  "items": [
-    {"food": "chicken", "quantity": "150 grams"},
-    {"food": "rice", "quantity": "half cup"}
-  ]
+  "entries": [
+    {
+      "timestamp": "2025-09-06T10:30:00Z",
+      "items": [
+        {
+          "food": "chicken breast",
+          "quantity": "150 grams",
+          "macros": {
+            "calories": 248,
+            "protein_g": 46.5,
+            "carbs_g": 0,
+            "fat_g": 5.4
+          }
+        },
+        {
+          "food": "rice", 
+          "quantity": "0.5 cup",
+          "macros": {
+            "calories": 98,
+            "protein_g": 2.0,
+            "carbs_g": 21.0,
+            "fat_g": 0.2
+          }
+        }
+      ]
+    }
+  ],
+  "daily_macros": {
+    "calories": 346,
+    "protein_g": 48.5,
+    "carbs_g": 21.0,
+    "fat_g": 5.6
+  }
 }
 ```
 
@@ -46,6 +74,8 @@ voice-food-logger/
 ├── processing/
 │   └── prompts/
 │       └── parser.yaml     # LLM prompts for food parsing
+├── data/
+│   └── nutrition_db.json   # Mock nutritional database
 ├── logs/                   # Daily JSON files storage
 │   └── .gitkeep
 ├── test_data/
@@ -56,12 +86,13 @@ voice-food-logger/
     ├── test_transcription.py
     ├── test_processing.py
     ├── test_storage.py
+    ├── test_nutrition.py      # Phase 2 nutrition tests
     └── test_integration.py
 ```
 
 ## Development Status
 
-### ✅ Completed
+### ✅ Phase 1: Core Voice Logging (COMPLETED)
 - [x] Create GitHub repo and initialize project structure
 - [x] Set up configuration files (.env, requirements.txt, .gitignore)
 - [x] Build transcription.py with Groq Whisper integration
@@ -72,18 +103,28 @@ voice-food-logger/
 - [x] **Web Audio API Integration** - Browser microphone recording
 - [x] **Complete Pipeline** - Voice → transcription → LLM → storage
 - [x] **Multi-format Support** - WAV, WebM, MP3, M4A, OGG audio
-- [x] **Real-time Feedback** - Pulsing animations, timer, state management
+- [x] **Real-time Feedback** - Timer, state management
 - [x] **Documentation** - README.md with setup and usage instructions
 
+### ✅ Phase 2: Nutritional Data & Daily Tracking (COMPLETED)
+- [x] **Mock Nutritional Database** - `data/nutrition_db.json` with 13 common foods
+- [x] **Enhanced Processing** - Nutrition lookup with fuzzy matching & unit conversion
+- [x] **Macro Calculations** - Backend calculations for calories, protein, carbs, fat
+- [x] **Enhanced Storage** - Store individual item macros + daily totals
+- [x] **Table-Style UI** - Macro tables for each food item
+- [x] **Daily Summary** - Prominent daily macro totals display
+- [x] **Comprehensive Tests** - `test_nutrition.py` with 5/5 tests passing
+- [x] **Streamlined Frontend** - Reduced from 626 to 463 lines while keeping functionality
+
 ### Key Features
-✅ iPhone-style circular record button with pulsing animation  
-✅ Real-time recording timer and visual state changes  
-✅ Automatic audio processing after recording stops  
-✅ Structured food data output with quantities  
-✅ Daily JSON file storage with timestamp  
-✅ Multi-format audio support (WebM, WAV, MP3, etc.)  
-✅ Error handling with user-friendly messages  
-✅ Complete test suite for all modules
+✅ **Voice Recording** - iPhone-style circular record button  
+✅ **Smart Food Parsing** - Natural language → structured data  
+✅ **Nutritional Lookup** - Backend macro calculations with unit conversion  
+✅ **Daily Tracking** - Individual item macros + daily totals  
+✅ **Table Display** - Clean macro visualization (calories, protein, carbs, fat)  
+✅ **Multi-format Audio** - WebM, WAV, MP3, M4A, OGG support  
+✅ **Real-time Feedback** - Recording timer, processing states  
+✅ **Comprehensive Testing** - Full test suite including nutrition tests
 
 ## Notes
 This is a disposable prototype focused on validating the voice → structured food data pipeline. Priority is functionality over polish.

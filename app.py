@@ -6,7 +6,7 @@ from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 from transcription import transcribe_file
 from processing import process_food_text
-from storage import store_food_data, get_today_entries
+from storage import store_food_data, get_today_entries, get_daily_totals
 
 # Load environment variables from .env file
 load_dotenv()
@@ -23,7 +23,8 @@ def allowed_file(filename):
 def index():
     """Main page with recording interface and today's entries"""
     today_entries = get_today_entries()
-    return render_template('index.html', entries=today_entries)
+    daily_totals = get_daily_totals()
+    return render_template('index.html', entries=today_entries, daily_totals=daily_totals)
 
 @app.route('/upload_audio', methods=['POST'])
 def upload_audio():
@@ -74,6 +75,12 @@ def get_entries():
     """API endpoint to get today's entries"""
     entries = get_today_entries()
     return jsonify(entries)
+
+@app.route('/daily_totals')
+def get_daily_totals_api():
+    """API endpoint to get daily macro totals"""
+    totals = get_daily_totals()
+    return jsonify(totals)
 
 @app.route('/test_pipeline')
 def test_pipeline():
